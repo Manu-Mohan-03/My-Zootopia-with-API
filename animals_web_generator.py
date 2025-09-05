@@ -57,10 +57,14 @@ def error_html(unknown_phrase):
     html_body = f"<h2>The animal '{unknown_phrase}' doesn't exist.</h2>"
     return html_body
 
+
 def main():
     animal = input("Enter name of an animal: ")
-    #animals_data = load_data('animals_data.json')
-    animals_data = data_fetcher.fetch_data(animal)
+    try:
+        animals_data = data_fetcher.fetch_data(animal)
+    except Exception as error:
+        print(error)
+        return None
     if animals_data:
         animals_info = get_animal_info(animals_data)
         animals_html = edit_html_template("animals_template.html",animals_info)

@@ -26,7 +26,7 @@ def fetch_data(animal_name):
     """
     query_string = "?name=" + animal_name
     url = REQUEST_URL + query_string
-    response = requests.get(url, headers={'X-Api-Key': API_KEY})
+    response = requests.get(url, headers={'X-Api-Key1': API_KEY})
     if response.status_code == requests.codes.ok:
         return response.json()
     else:
