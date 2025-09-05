@@ -1,14 +1,8 @@
-import json
+"""Creates a html page about animals """
 import data_fetcher
 
 
-def load_data(file_path):
-    """ Loads a JSON file """
-    with open(file_path, "r") as handle:
-        return json.load(handle)
-
-
-def get_animal_info(fox_data, skin_type):
+def get_animal_info(animal_data):
     """ Gets the only required information about animals from the JSON CONTENT
     fox_data: List of dictionaries which contains data from JSON file
     skin_type: The skin type filter chosen by user
@@ -16,25 +10,12 @@ def get_animal_info(fox_data, skin_type):
     """
     animal_info_str = ""
     # adding information to a string
-    for fox in fox_data:
-        # Display all contents if user choose *
-        if skin_type is None:
-            # For Serialization
-            animal_info_str += serialize_animal(fox)
-        elif skin_type == fox.get("characteristics").get("skin_type").lower():
-            # For Serialization
-            animal_info_str += serialize_animal(fox)
+    for animal in animal_data:
+        # For Serialization
+        animal_info_str += serialize_animal(animal)
 
     return animal_info_str
 
-
-def get_skin_types(fox_data):
-    """To show the different skin types for the user to chose"""
-    skin_types = set()
-    for fox in fox_data:
-        skin_type = fox.get("characteristics").get("skin_type")
-        skin_types.add(skin_type.lower())
-    return skin_types
 
 def serialize_animal(animal_obj):
     """To populate the html contents needed to display the required details"""
@@ -71,19 +52,8 @@ def write_file(file_path, contents):
         handle.write(contents)
 
 
-def user_prompt(skin_types):
-    """ Selection screen for the user(* to skip the filter)"""
-    while True:
-        input_str = f"Please select a skin type from {skin_types} or '*' to ignore skin selection: "
-        skin_type = input(input_str)
-        if skin_type.lower() in skin_types:
-            return skin_type.lower()
-        elif skin_type == '*':
-            return None
-
-
 def error_html(unknown_phrase):
-
+    """To display missing information page"""
     html_body = f"<h2>The animal '{unknown_phrase}' doesn't exist.</h2>"
     return html_body
 
@@ -92,9 +62,7 @@ def main():
     #animals_data = load_data('animals_data.json')
     animals_data = data_fetcher.fetch_data(animal)
     if animals_data:
-        skin_types_set = get_skin_types(animals_data)
-        skin_type = user_prompt(skin_types_set)
-        animals_info = get_animal_info(animals_data, skin_type)
+        animals_info = get_animal_info(animals_data)
         animals_html = edit_html_template("animals_template.html",animals_info)
     else:
         animals_html = error_html(animal)
