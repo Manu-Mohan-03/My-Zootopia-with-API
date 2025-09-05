@@ -73,7 +73,8 @@ def edit_html_template(file_path,new_string):
     """Open the html file for reading"""
     with open(file_path,"r", encoding="utf-8") as handle:
         html_template = handle.read()
-    html_template = html_template.replace("__REPLACE_ANIMALS_INFO__", new_string)
+    html_template = html_template.replace("__REPLACE_ANIMALS_INFO__",
+                                          new_string)
     return html_template
 
 def write_file(file_path, contents):
@@ -93,14 +94,22 @@ def user_prompt(skin_types):
             return None
 
 
+def error_html(unknown_phrase):
+
+    html_body = f"<h2>The animal '{unknown_phrase}' doesn't exist.</h2>"
+    return html_body
+
 def main():
     animal = input("Enter name of an animal: ")
     #animals_data = load_data('animals_data.json')
     animals_data = get_animals_json(animal)
-    skin_types_set = get_skin_types(animals_data)
-    skin_type = user_prompt(skin_types_set)
-    animals_info = get_animal_info(animals_data, skin_type)
-    animals_html = edit_html_template("animals_template.html",animals_info)
+    if animals_data:
+        skin_types_set = get_skin_types(animals_data)
+        skin_type = user_prompt(skin_types_set)
+        animals_info = get_animal_info(animals_data, skin_type)
+        animals_html = edit_html_template("animals_template.html",animals_info)
+    else:
+        animals_html = error_html(animal)
     write_file("animals.html", animals_html)
     print("Website was successfully generated to the file animals.html.")
 
