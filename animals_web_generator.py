@@ -94,14 +94,15 @@ def user_prompt(skin_types):
 
 
 def main():
+    animal = input("Enter name of an animal: ")
     #animals_data = load_data('animals_data.json')
-    animals_data = get_animals_json('fox')
+    animals_data = get_animals_json(animal)
     skin_types_set = get_skin_types(animals_data)
     skin_type = user_prompt(skin_types_set)
     animals_info = get_animal_info(animals_data, skin_type)
     animals_html = edit_html_template("animals_template.html",animals_info)
     write_file("animals.html", animals_html)
-    print("animals.html successfully reloaded")
+    print("Website was successfully generated to the file animals.html.")
 
 
 if __name__ == "__main__":
