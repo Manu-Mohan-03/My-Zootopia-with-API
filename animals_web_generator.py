@@ -1,4 +1,18 @@
 import json
+import requests
+
+REQUEST_URL = "https://api.api-ninjas.com/v1/animals"
+API_KEY = "l7+o4RVMiAbUNM+cSdKMFw==rAICoCgzv2QsZ44B"
+
+def get_animals_json(animal):
+    query_string = "?name=" + animal
+    url = REQUEST_URL + query_string
+    response = requests.get(url, headers={'X-Api-Key': API_KEY})
+    if response.status_code == requests.codes.ok:
+        return response.json()
+    else:
+        msg =  f"Error: {response.status_code} {response.text}"
+        raise Exception(msg)
 
 def load_data(file_path):
     """ Loads a JSON file """
@@ -80,12 +94,14 @@ def user_prompt(skin_types):
 
 
 def main():
-    animals_data = load_data('animals_data.json')
+    #animals_data = load_data('animals_data.json')
+    animals_data = get_animals_json('fox')
     skin_types_set = get_skin_types(animals_data)
     skin_type = user_prompt(skin_types_set)
     animals_info = get_animal_info(animals_data, skin_type)
     animals_html = edit_html_template("animals_template.html",animals_info)
     write_file("animals.html", animals_html)
+    print("animals.html successfully reloaded")
 
 
 if __name__ == "__main__":
