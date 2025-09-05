@@ -1,18 +1,6 @@
 import json
-import requests
+import data_fetcher
 
-REQUEST_URL = "https://api.api-ninjas.com/v1/animals"
-API_KEY = "l7+o4RVMiAbUNM+cSdKMFw==rAICoCgzv2QsZ44B"
-
-def get_animals_json(animal):
-    query_string = "?name=" + animal
-    url = REQUEST_URL + query_string
-    response = requests.get(url, headers={'X-Api-Key': API_KEY})
-    if response.status_code == requests.codes.ok:
-        return response.json()
-    else:
-        msg =  f"Error: {response.status_code} {response.text}"
-        raise Exception(msg)
 
 def load_data(file_path):
     """ Loads a JSON file """
@@ -102,7 +90,7 @@ def error_html(unknown_phrase):
 def main():
     animal = input("Enter name of an animal: ")
     #animals_data = load_data('animals_data.json')
-    animals_data = get_animals_json(animal)
+    animals_data = data_fetcher.fetch_data(animal)
     if animals_data:
         skin_types_set = get_skin_types(animals_data)
         skin_type = user_prompt(skin_types_set)
